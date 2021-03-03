@@ -3,6 +3,7 @@ package com.tts.TechTalentTwitter.controller;
 import java.util.HashMap;
 import java.util.List;
 
+import com.tts.TechTalentTwitter.model.TweetDisplay;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,7 +25,7 @@ public class UserController {
   @GetMapping(value = "/users/{username}")
   public String getUser(@PathVariable(value="username") String username, Model model) {
     User user = userService.findByUsername(username);
-    List<Tweet> tweets = tweetService.findAllByUser(user);
+    List<TweetDisplay> tweets = tweetService.findAllByUser(user);
     User loggedInUser = userService.getLoggedInUser();
     List<User> following = loggedInUser.getFollowing();
     boolean isFollowing = false;
@@ -51,11 +52,11 @@ public class UserController {
     setFollowingStatus(users, usersFollowing, model);
     return "users";
   }
-  
+
   private void setTweetCounts(List<User> users, Model model) {
     HashMap<String, Integer> tweetCounts = new HashMap<>();
     for (User user : users) {
-      List<Tweet> tweets = tweetService.findAllByUser(user);
+      List<TweetDisplay> tweets = tweetService.findAllByUser(user);
       tweetCounts.put(user.getUsername(), tweets.size());
     }
     model.addAttribute("tweetCounts", tweetCounts);
@@ -73,5 +74,6 @@ public class UserController {
       }
     }
     model.addAttribute("followingStatus", followingStatus);
+
   }
 }
